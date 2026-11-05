@@ -1,7 +1,30 @@
 import axios from 'axios';
 
 // Backend Spring Boot Student API endpoint
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/manco/students';
+// Resolves dynamically from Render Blueprint (VITE_API_HOST), explicit override (VITE_API_BASE_URL), or local fallback
+const resolveBaseUrl = () => {
+  // 1. Dynamic host injected by Render Blueprint fromService (e.g. student-backend-xxxx.onrender.com)
+  const host = import.meta.env.VITE_API_HOST;
+  if (host && host.trim()) {
+    const cleanHost = host.trim().replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    return `https://${cleanHost}/manco/students`;
+  }
+
+  // 2. Explicit base URL override
+  const explicitUrl = import.meta.env.VITE_API_BASE_URL;
+  if (explicitUrl && explicitUrl.trim()) {
+    let url = explicitUrl.trim();
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = `https://${url}`;
+    }
+    return url;
+  }
+
+  // 3. Fallback for local development
+  return 'http://localhost:8080/manco/students';
+};
+
+const BASE_URL = resolveBaseUrl();
 
 const apiClient = axios.create({
   baseURL: BASE_URL,

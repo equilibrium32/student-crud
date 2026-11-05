@@ -5,9 +5,11 @@ WORKDIR /app
 # Copy Maven wrapper and pom.xml first
 COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
-RUN chmod +x ./mvnw
 
-# Copy source code and build jar
+# Ensure Linux executable permissions and LF line endings
+RUN chmod +x ./mvnw && sed -i 's/\r$//' ./mvnw
+
+# Copy source code and build jar (skip tests for production image)
 COPY src/ ./src/
 RUN ./mvnw clean package -DskipTests
 
@@ -20,6 +22,10 @@ COPY --from=build /app/target/*.jar app.jar
 
 # Render assigns PORT at runtime
 ENV PORT=8080
+
+# Tune JVM for Render Free Tier (512MB RAM) to prevent OOM kills
+ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=65 -XX:+UseSerialGC -Xss512k -XX:ReservedCodeCacheSize=48m"
+
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

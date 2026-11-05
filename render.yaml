@@ -45,6 +45,10 @@ services:
         fromDatabase:
           name: student-db
           property: password
+      - key: DB_SSLMODE
+        value: require
+      - key: JAVA_TOOL_OPTIONS
+        value: -XX:MaxRAMPercentage=65 -XX:+UseSerialGC -Xss512k -XX:ReservedCodeCacheSize=48m
 
   # -----------------------------------------------------------
   # 2. Vite React Frontend (Static Site)
@@ -62,5 +66,10 @@ services:
         source: /*
         destination: /index.html
     envVars:
+      - key: VITE_API_HOST
+        fromService:
+          type: web
+          name: student-backend
+          property: host
       - key: VITE_API_BASE_URL
         value: https://student-backend.onrender.com/manco/students
