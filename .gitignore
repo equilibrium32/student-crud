@@ -1,0 +1,21 @@
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+*.local
+.env.local
+
+# Java / Spring Boot
+target/
+student/target/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE & OS
+.idea/
+student/.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
