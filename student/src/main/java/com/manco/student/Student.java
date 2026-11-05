@@ -1,24 +1,32 @@
 package com.manco.student;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id;
 
-@Entity // This tells Hibernate to make a table out of this class
+@Entity
 public class Student {
-    @jakarta.persistence.Id
-    public Long getId1() {
-        return id1;
-    }
-
-    public void setId1(Long id1) {
-        this.id1 = id1;
-    }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String firstName;
+    private String lastName;
+    private String course;
+    private String section;
+
+    public Student() {
+    }
+
+    public Student(String firstName, String lastName, String course, String section) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.course = course;
+        this.section = section;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -58,11 +66,4 @@ public class Student {
     public void setSection(String section) {
         this.section = section;
     }
-
-    private Long id1;
-    private Integer id;
-    private String firstName;
-    private String lastName;
-    private String course;
-    private String section;
 }
