@@ -51,13 +51,12 @@ services:
         value: -XX:MaxRAMPercentage=65 -XX:+UseSerialGC -Xss512k -XX:ReservedCodeCacheSize=48m
 
   # -----------------------------------------------------------
-  # 2. Vite React Frontend (Static Site)
+  # 2. Vite React Frontend (Static Site - Served globally via CDN)
+  # Note: Static sites do not have a region or compute plan in Render.
   # -----------------------------------------------------------
   - type: web
     name: student-frontend
     runtime: static
-    plan: free
-    region: oregon
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
