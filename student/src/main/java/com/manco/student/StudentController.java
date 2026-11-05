@@ -1,4 +1,5 @@
 package com.manco.student;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -7,6 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*")
 @Controller
 @RequestMapping(path="/manco/students")
 public class StudentController {

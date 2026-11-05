@@ -1,0 +1,66 @@
+# Render.com Blueprint Specification
+# Docs: https://render.com/docs/blueprint-spec
+
+version: "1"
+
+databases:
+  # Managed PostgreSQL Database for Student CRUD
+  - name: student-db
+    databaseName: db_student
+    user: db_student_user
+    plan: free
+    region: oregon
+
+services:
+  # -----------------------------------------------------------
+  # 1. Spring Boot Backend Web Service (Java 21 + Docker)
+  # -----------------------------------------------------------
+  - type: web
+    name: student-backend
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerContext: ./student
+    dockerfilePath: ./student/Dockerfile
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DB_HOST
+        fromDatabase:
+          name: student-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: student-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: student-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: student-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: student-db
+          property: password
+
+  # -----------------------------------------------------------
+  # 2. Vite React Frontend (Static Site)
+  # -----------------------------------------------------------
+  - type: web
+    name: student-frontend
+    runtime: static
+    plan: free
+    region: oregon
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://student-backend.onrender.com/manco/students
